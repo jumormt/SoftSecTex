@@ -78,11 +78,22 @@ App开发者由于缺少审核机制，恶意软件开发商可以轻易地发�
 
 \section{关键技术和实践难点} \label{sec:two}
    第\ref{sec:two}章的主要内容是关键技术和实践难点。
-\subsection{metadata数据对比——短文本相似度}
+\subsection{短文本相似度}
 \subsubsection{提取数据}
 选取$metadata$中的$description\_html$字段。
 
-\subsubsection{文本预处理}
+\subsubsection{文本预处理原理}
+由于我们分析的应用下载自GooglePlay商店，其中大部分为英文型应用，英文文本的预处理方法和中文的有部分区别。首先，英文文本挖掘预处理一般可以不做分词（特殊需求除外），而中文预处理分词是必不可少的一步。第二点，大部分英文文本都是uft-8的编码，这样在大多数时候处理的时候不用考虑编码转换的问题，而中文文本处理必须要处理unicode的编码问题。
+
+而英文文本的预处理也有自己特殊的地方，其中特殊在于词干提取(stemming)和词形还原(lemmatization)。这个东西主要是英文有单数，复数和各种时态，导致一个词会有不同的形式。比如“countries”和"country"，"wolf"和"wolves"，我们期望是有一个词。
+
+词干提取(stemming)和词型还原(lemmatization)是英文文本预处理的特色。两者其实有共同点，即都是要找到词的原始形式。只不过词干提取(stemming)会更加激进一点，它在寻找词干的时候可以会得到不是词的词干。比如"imaging"的词干可能得到的是"imag", 并不是一个词。而词形还原则保守一些，它一般只对能够还原成一个正确的词的词进行处理。个人比较喜欢使用词型还原而不是词干提取。
+
+另外，由于英文单词有大小写之分，我们期望统计时像“Home”和“home”是一个词。因此一般需要将所有的词都转化为小写。在英文文本中有很多无效的词，比如“a”，“to”，一些短词，还有一些标点符号，这些我们不想在文本分析的时候引入，因此需要去掉，这些词就是停用词。
+
+TF-IDF："词频"（TF）和"逆文档频率"（IDF）以后，两个值相乘，得到了一个词的TF-IDF值。某个词对文章的重要性越高，它的TF-IDF值就越大。所以，排在最前面的几个词，就是这篇文章的关键词。
+
+\subsubsection{文本预处理步骤}
 1. 去掉所有带符号的词，如邮箱后缀、$hyphen$连词、缩写等；
 
 2. 去掉非英文的词汇；
@@ -99,10 +110,48 @@ App开发者由于缺少审核机制，恶意软件开发商可以轻易地发�
 
 8.计算各个$token$的$TFIDF$值,即"词频-逆文本频率"
 
-\subsubsection{训练模型}
-1.基于预处理的文本，建立词向量，采用$Skip-Gram$训练神经网络，优化收敛词向量；
+\subsubsection{训练模型及相似度比较原理}
+最早的词向量是很冗长的，它使用是词向量维度大小为整个词汇表的大小，对于每个具体的词汇表中的词，将对应的位置置为1。比如我们有下面的5个词组成的词汇表，词"Queen"的序号为2， 那么它的词向量就是(0,1,0,0,0)。同样的道理，词"Woman"的词向量就是(0,0,0,1,0)。这种词向量的编码方式我们一般叫做1-of-N representation或者one hot representation.
 
-2.将训练好的模型和文本序列化至本地。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig8.png}
+  \caption{one hot representation}
+  \label{figure:zju6}
+  \end{figure}
+
+One hot representation用来表示词向量非常简单，但是却有很多问题。最大的问题是我们的词汇表一般都非常大，比如达到百万级别，这样每个词都用百万维的向量来表示简直是内存的灾难。
+
+Dristributed representation可以解决One hot representation的问题，它的思路是通过训练，将每个词都映射到一个较短的词向量上来。所有的这些词向量就构成了向量空间，进而可以用普通的统计学的方法来研究词与词之间的关系。这个较短的词向量维度是多大呢？这个一般需要我们在训练时自己来指定。
+
+比如下图我们将词汇表里的词用"Royalty","Masculinity", "Femininity"和"Age"4个维度来表示，King这个词对应的词向量可能是(0.99,0.99,0.05,0.7)。当然在实际情况中，我们并不能对词向量的每个维度做一个很好的解释。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig9.png}
+  \caption{Dristributed representation}
+  \label{figure:zju7}
+  \end{figure}
+
+CBOW模型的训练输入是某一个特征词的上下文相关的词对应的词向量，而输出就是这特定的一个词的词向量。比如下面这段话，我们的上下文大小取值为4，特定的这个词是"Learning"，也就是我们需要的输出词向量,上下文对应的词有8个，前后各4个，这8个词是我们模型的输入。由于CBOW使用的是词袋模型，因此这8个词都是平等的，也就是不考虑他们和我们关注的词之间的距离大小，只要在我们上下文之内即可。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig10.png}
+  \caption{one hot representation}
+  \label{figure:zju8}
+  \end{figure}
+
+这样我们这个CBOW的例子里，我们的输入是8个词向量，输出是所有词的softmax概率（训练的目标是期望训练样本特定词对应的softmax概率最大），对应的CBOW神经网络模型输入层有8个神经元，输出层有词汇表大小个神经元。隐藏层的神经元个数我们可以自己指定。通过DNN的反向传播算法，我们可以求出DNN模型的参数，同时得到所有的词对应的词向量。这样当我们有新的需求，要求出某8个词对应的最可能的输出中心词时，我们可以通过一次DNN前向传播算法并通过softmax激活函数找到概率最大的词对应的神经元即可。
+
+% 余弦相似度不再详述。
+
+\subsubsection{训练模型及相似度比较步骤}
+1.基于预处理的文本，建立词向量，采用$CBOW$训练神经网络，优化收敛词向量；
+
+2.依据短文本中各个关键词的tfidf权重，将短文本中包含的词向量做加权平均，作为该短文本的词向量；
+
+3.比较两个短文本向量的COS相似度。
 
 \subsection{metadata其他数据对比}
 \subsubsection{字符串相似度}
