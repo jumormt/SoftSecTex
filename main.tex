@@ -65,93 +65,19 @@
     \maketitle
     \thispagestyle{fancy}
 
-\section{章节 Section} \label{sec:one}
-    this is the Section \ref{sec:one}
-    输入中文内容 Your text goes here. \\
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ \\
-    $\mathcal{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$ \\
-    abcdefghijklmnopqrstuvwxyz \\
-    The quick brown fox jumps over the lazy dog.\\
-    1234567890
-    \begin{align}
-		& ABCDEFGHIJKLMNOPQRSTUVWXYZ \label{eq:alphabet} \\
-		& abcdefghijklmnopqrstuvwxyz \\
-	& \alpha \beta \gamma \delta \epsilon \varepsilon \zeta \eta \theta \lambda \mu \nu \xi \pi \rho \sigma \tau \upsilon \phi \varphi \chi \psi \omega
-	\end{align}
-    \begin{align}
-	 \begin{bmatrix}
-		1 & 2 \\
-		3 & 4 \\
-	\end{bmatrix}
-	 \begin{pmatrix}
-	1 & 2 \\
-	3 & 4 \\
-	\end{pmatrix}
-	 \begin{matrix}
-	1 & 2 \\
-	3 & 4 \\
-	\end{matrix}
-	\end{align}
+\section{研究背景与意义} \label{sec:one}
+    第\ref{sec:one}章的主要内容是研究的背景与意义。
+\subsection{移动终端的飞速发展}
+目前，移动设备的使用频率已经超过了PC端，并且移动设备中储存了更多没有备份过的个人信息、甚至企业数据，一旦泄露，后果将无法弥补
 
-    \begin{equation}
-	A_{t+1} = \arg\min_A \ \mathcal{L}(A,E_t,\Delta\tau_t,W_t,b_t), \nonumber
-	\end{equation}
+\subsection{仿冒App层出不穷}
+App开发者由于缺少审核机制，恶意软件开发商可以轻易地发布一些仿冒的产品，因此山寨的应用层出不穷
 
-    \begin{equation}
-	\begin{aligned} \label{eq:rasl}
-	\min_{A,E,\Delta \tau} \quad & \sum_{i=1}^{N}||A_i||_* + \lambda ||E_i||_1  \\
-	\mathrm{s.t.} \quad & D_i \circ \tau_i + \sum_{k=1}^{n_i} J_{ik} \Delta \tau_i \epsilon_k \epsilon_k^T = A_i + E_i, \\
-	& i = 1,2,\cdots,N.
-	\end{aligned}
-	\end{equation}
+\subsection{课题目标}
+设计并实现一个检测假冒应用程序的工具
 
-    \begin{table}[htbp]
-		\caption{Title of table} \label{tab:table}
-		\centering
-		\addtolength{\tabcolsep}{-0mm} % 控制列间距
-		\begin{tabular}{ccccc}
-			\toprule[0.75pt]	% package booktabs
-			\multicolumn{4}{c}{table head} \\
-			\midrule[0.5pt]	% package booktabs
-			\multirow{4}{*}{text} & 1 & 2 & 3 & 4 \\  % package multirow
-			& 5 & 6 & 7 & 8 \\
-			\cmidrule[0.5pt]{2-4}	% package booktabs
-			& 9 & 10 & 11 & 12 \\
-			& 13 & 14 & 15 & 16 \\
-			\bottomrule[0.75pt]	% package booktabs
-		\end{tabular}
-	\end{table}
+\section{关键技术和实践难点} \label{sec:two}
+   第\ref{sec:two}章的主要内容是关键技术和实践难点。
 
-%    引用： Eq. \eqref{eq:alphabet}, Fig. \ref{figure:zju1},  \\
-%    \begin{figure}[htbp]
-%		\centering
-%		\includegraphics[width=0.2\textwidth]{fig/ZJU_BLACK.eps}
-%		\includegraphics[width=0.2\textwidth]{fig/ZJU_BLUE.eps}
-%		\caption{figure 1}
-%		\label{figure:zju1}
-%	\end{figure}
-
-%     Fig. \ref{figure:zju2}
-%    \begin{figure}[htbp]
-%		\centering
-%		\includegraphics[width=0.2\textwidth]{fig/ZJU_BLACK.eps}
-%		\includegraphics[width=0.2\textwidth]{fig/ZJU_BLUE.eps}
-%		\caption{figure 2}
-%		\label{figure:zju2}
-%	\end{figure}
-
-    \begin{algorithm}
-		\caption{Title of the Algorithm}
-		\label{algo:ref}
-		\begin{algorithmic}[1]
-			\REQUIRE some words.  % this command shows "Input"
-			\ENSURE ~\\           % this command shows "Initialized"
-			some text goes here ... \\
-			\WHILE {\emph{not converged}}
-			\STATE ... \\  % line number at left side
-			\ENDWHILE
-			\RETURN this is the lat part.  % this command shows "Output"
-		\end{algorithmic}
-	\end{algorithm}
 
 \end{document}
