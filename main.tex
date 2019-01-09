@@ -134,7 +134,7 @@ App开发者由于缺少审核机制，恶意软件开发商可以轻易地发�
 
 \section{成果展示}
 \subsection{metadata数据对比}
-选取$metadata$中的$description\_html$字段，对比如图。
+选取$metadata$中的$description\_html$字段，对比如图：
 
 \begin{figure}[htbp]
 \centering
@@ -151,5 +151,34 @@ App开发者由于缺少审核机制，恶意软件开发商可以轻易地发�
   \caption{相似度为0.173356448的两段文本对比}
   \label{figure:zju2}
   \end{figure}
+
+选取$metadata$中的$title$、$package_name$、$developer\_email$等字段，对比如图所示：
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig5.png}
+  \caption{title字段的相似度对比}
+  \label{figure:zju3}
+  \end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig6.png}
+  \caption{$package\_name$字段相似度对比}
+  \label{figure:zju4}
+  \end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/fig7.png}
+  \caption{$developer\_email$字段相似度对比}
+  \label{figure:zju5}
+  \end{figure}
+
+\subsection{$apk\_icon$数据对比}
+对每张图片生成一个“指纹”（fingerprint）字符串，然后比较不同图片的指纹。结果越接近，就说明图片越相似，对比如图所示。
+
+\section{致谢}
+感谢学校提供的学习与实践的机会；感谢王浩宇老师给予的耐心指导；
 
 \end{document}
